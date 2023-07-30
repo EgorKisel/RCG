@@ -1,10 +1,21 @@
 ext.versions = [
-
+        lifecycle       : '2.6.1',
+        adapterDelegates: '4.3.2'
 ]
 
 ext.libs = [
-        coreKtx         : "androidx.core:core-ktx:1.8.0",
-        appcompat       : "androidx.appcompat:appcompat:1.6.1",
-        material        : "com.google.android.material:material:1.5.0",
-        constraintLayout: "androidx.constraintlayout:constraintlayout:2.1.4"
+        coreKtx                    : "androidx.core:core-ktx:1.8.0",
+        appcompat                  : "androidx.appcompat:appcompat:1.6.1",
+        material                   : "com.google.android.material:material:1.5.0",
+        constraintLayout           : "androidx.constraintlayout:constraintlayout:2.1.4",
+        fragment                   : "androidx.fragment:fragment-ktx:1.6.1",
+
+        // Lifecycle
+        lifecycleViewModel         : "androidx.lifecycle:lifecycle-viewmodel-ktx:$versions.lifecycle",
+        lifecycleLiveData          : "androidx.lifecycle:lifecycle-viewmodel-ktx:$versions.lifecycle",
+        lifecycleCompiller         : "androidx.lifecycle:lifecycle-viewmodel-ktx:$versions.lifecycle",
+
+        // Adapter
+        adapterDelegates           : "com.hannesdorfmann:adapterdelegates4-kotlin-dsl:$versions.adapterDelegates",
+        adapterDelegatesViewBinding: "com.hannesdorfmann:adapterdelegates4-kotlin-dsl-viewbinding:$versions.adapterDelegates"
 ]
