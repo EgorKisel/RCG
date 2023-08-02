@@ -1,6 +1,6 @@
-package com.example.rcg.ui.main
+package com.example.rcg.model.game
 
-import com.example.rcg.ui.base.ListItem
+import com.example.rcg.model.base.ListItem
 
 data class GamesHorizontalItem(
     val title: String,

@@ -19,8 +19,8 @@
 
         <ImageView
             android:id="@+id/imageView"
-            android:layout_width="146dp"
-            android:layout_height="208dp"
+            android:layout_width="@dimen/game_card_thin_width"
+            android:layout_height="@dimen/game_card_thin_high"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"

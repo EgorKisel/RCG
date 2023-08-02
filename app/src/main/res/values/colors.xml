@@ -11,4 +11,6 @@
     <color name="baseBlack">#FF000A12</color>
     <color name="categoryTitleText">@color/baseWhite</color>
     <color name="gameTitleText">@color/baseWhite</color>
+
+    <color name="placeholder">#FF4F4F4F</color>
 </resources>

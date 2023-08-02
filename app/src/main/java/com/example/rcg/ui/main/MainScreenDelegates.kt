@@ -3,7 +3,14 @@ package com.example.rcg.ui.main
 import com.example.rcg.databinding.ItemGameThinBinding
 import com.example.rcg.databinding.ItemGameWideBinding
 import com.example.rcg.databinding.ItemGamesHorizontalBinding
-import com.example.rcg.ui.base.ListItem
+import com.example.rcg.databinding.ItemProgressThinBinding
+import com.example.rcg.databinding.ItemProgressWideBinding
+import com.example.rcg.model.base.ListItem
+import com.example.rcg.model.game.GameThinItem
+import com.example.rcg.model.game.GameWideItem
+import com.example.rcg.model.game.GamesHorizontalItem
+import com.example.rcg.model.game.ProgressThinItem
+import com.example.rcg.model.game.ProgressWideItem
 import com.hannesdorfmann.adapterdelegates4.ListDelegationAdapter
 import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateViewBinding
 
@@ -19,7 +26,9 @@ object MainScreenDelegates {
                 ).apply {
                     recyclerView.adapter = ListDelegationAdapter(
                         wideGameDelegate,
-                        thinGameDelegate
+                        thinGameDelegate,
+                        wideProgressDelegate,
+                        thinProgressDelegate
                     )
                 }
             }
@@ -32,6 +41,17 @@ object MainScreenDelegates {
                 }
             }
         }
+
+    private val wideProgressDelegate =
+        adapterDelegateViewBinding<ProgressWideItem, ListItem, ItemProgressWideBinding>(
+            { inflater, container ->
+                ItemProgressWideBinding.inflate(
+                    inflater,
+                    container,
+                    false
+                )
+            }
+        ) {}
 
     private val wideGameDelegate =
         adapterDelegateViewBinding<GameWideItem, ListItem, ItemGameWideBinding>(
@@ -49,6 +69,17 @@ object MainScreenDelegates {
                 binding.executePendingBindings()
             }
         }
+
+    private val thinProgressDelegate =
+        adapterDelegateViewBinding<ProgressThinItem, ListItem, ItemProgressThinBinding>(
+            { inflater, container ->
+                ItemProgressThinBinding.inflate(
+                    inflater,
+                    container,
+                    false
+                )
+            }
+        ) {}
 
     private val thinGameDelegate =
         adapterDelegateViewBinding<GameThinItem, ListItem, ItemGameThinBinding>(
