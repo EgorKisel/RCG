@@ -1,9 +1,13 @@
 ext.versions = [
         lifecycle       : '2.6.1',
-        adapterDelegates: '4.3.2'
+        adapterDelegates: '4.3.2',
+        retrofit        : '2.9.0',
+        glide           : '4.15.1',
 ]
 
 ext.libs = [
+        coroutines                 : "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3",
+
         coreKtx                    : "androidx.core:core-ktx:1.8.0",
         appcompat                  : "androidx.appcompat:appcompat:1.6.1",
         material                   : "com.google.android.material:material:1.5.0",
@@ -17,5 +21,14 @@ ext.libs = [
 
         // Adapter
         adapterDelegates           : "com.hannesdorfmann:adapterdelegates4-kotlin-dsl:$versions.adapterDelegates",
-        adapterDelegatesViewBinding: "com.hannesdorfmann:adapterdelegates4-kotlin-dsl-viewbinding:$versions.adapterDelegates"
+        adapterDelegatesViewBinding: "com.hannesdorfmann:adapterdelegates4-kotlin-dsl-viewbinding:$versions.adapterDelegates",
+
+        // Network
+        retrofit                   : "com.squareup.retrofit2:retrofit:$versions.retrofit",
+        retrofitConverterGson      : "com.squareup.retrofit2:converter-gson:$versions.retrofit",
+        gson                       : "com.google.code.gson:gson:2.10.1",
+        okHttpLoggingInterceptor   : "com.squareup.okhttp3:logging-interceptor:4.9.3",
+
+        // Glide
+        glide                      : "com.github.bumptech.glide:glide:$versions.glide",
 ]

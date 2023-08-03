@@ -3,6 +3,7 @@ package com.example.rcg.viewmodel.main
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.example.core_network.di.NetworkComponent
 import com.example.rcg.model.base.ListItem
 import com.example.rcg.model.game.GameThinItem
 import com.example.rcg.model.game.GameWideItem
@@ -11,11 +12,11 @@ import com.example.rcg.model.game.ProgressThinItem
 import com.example.rcg.model.game.ProgressWideItem
 import com.example.rcg.viewmodel.base.BaseViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class MainScreenVewModel : BaseViewModel() {
 
+    private val api = NetworkComponent.createApi()
     private val _data = MutableLiveData<List<ListItem>>()
     val data: LiveData<List<ListItem>> = _data
 
@@ -30,34 +31,75 @@ class MainScreenVewModel : BaseViewModel() {
     private fun getLoaders(): List<ListItem> {
         return listOf(
             GamesHorizontalItem(
-                title = "Wide games title",
+                title = "The most anticipated",
                 games = IntRange(1, 2).map { ProgressWideItem }
             ),
             GamesHorizontalItem(
-                title = "Thin games title",
+                title = "Latest releases",
                 games = IntRange(1, 3).map { ProgressThinItem }
             ),
             GamesHorizontalItem(
-                title = "Wide games title",
+                title = "The most rated in 2023",
                 games = IntRange(1, 2).map { ProgressWideItem }
             )
         )
     }
 
     private suspend fun getItems(): List<ListItem> {
-        delay(2000L)
+        val mostAnticipatedResponse = api.games(
+            "721575b77ad74531b6066e37437c0b07", mapOf(
+                "dates" to "2023-08-03, 2024-08-03",
+                "ordering" to "-added"
+            )
+        )
+        val latestReleasesResponse = api.games(
+            "721575b77ad74531b6066e37437c0b07", mapOf(
+                "dates" to "2023-06-01, 2023-08-03"
+            )
+        )
+        val mostRatedResponse = api.games(
+            "721575b77ad74531b6066e37437c0b07", mapOf(
+                "dates" to "2023-01-01, 2023-08-04",
+                    "ordering" to "-rated"
+            )
+        )
+
+        val mostAnticipatedItems = mostAnticipatedResponse.results.map {
+            GameWideItem(
+                id = it.id,
+                title = it.title,
+                image = it.image
+            )
+        }
+
+        val latestReleasesItems = latestReleasesResponse.results.map {
+            GameThinItem(
+                id = it.id,
+                title = it.title,
+                image = it.image
+            )
+        }
+
+        val mostRatedItems = mostRatedResponse.results.map {
+            GameWideItem(
+                id = it.id,
+                title = it.title,
+                image = it.image
+            )
+        }
+
         return listOf(
             GamesHorizontalItem(
-                title = "Wide games title",
-                games = IntRange(1, 20).map { GameWideItem(it.toLong(), "Game title $it") }
+                title = "The most anticipated",
+                games = mostAnticipatedItems
             ),
             GamesHorizontalItem(
-                title = "Thin games title",
-                games = IntRange(1, 20).map { GameThinItem(it.toLong(), "Game title $it") }
+                title = "Latest releases",
+                games = latestReleasesItems
             ),
             GamesHorizontalItem(
-                title = "Wide games title",
-                games = IntRange(1, 20).map { GameWideItem(it.toLong(), "Game title $it") }
+                title = "The most rated in 2023",
+                games = mostRatedItems
             )
         )
     }

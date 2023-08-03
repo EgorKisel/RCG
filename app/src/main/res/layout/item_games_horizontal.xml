@@ -19,7 +19,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="@string/top_upcoming" />
+        tools:text="@string/most_anticipated" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
