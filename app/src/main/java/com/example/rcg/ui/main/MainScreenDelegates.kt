@@ -2,7 +2,9 @@ package com.example.rcg.ui.main
 
 import android.app.Activity
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
 import com.example.rcg.R
 import com.example.rcg.databinding.ItemGameThinBinding
 import com.example.rcg.databinding.ItemGameWideBinding
@@ -19,7 +21,7 @@ import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateViewBinding
 
 object MainScreenDelegates {
 
-    val gamesHorizontalDelegate =
+    fun gamesHorizontalDelegate() =
         adapterDelegateViewBinding<GamesHorizontalItem, ListItem, ItemGamesHorizontalBinding>(
             { inflater, container ->
                 ItemGamesHorizontalBinding.inflate(
@@ -40,7 +42,7 @@ object MainScreenDelegates {
             }
         }
 
-    val wideProgressDelegate =
+    fun wideProgressDelegate() =
         adapterDelegateViewBinding<ProgressWideItem, ListItem, ItemProgressWideBinding>(
             { inflater, container ->
                 ItemProgressWideBinding.inflate(
@@ -51,7 +53,7 @@ object MainScreenDelegates {
             }
         ) {}
 
-    val wideGameDelegate =
+    fun wideGameDelegate() =
         adapterDelegateViewBinding<GameWideItem, ListItem, ItemGameWideBinding>(
             { inflater, container ->
                 ItemGameWideBinding.inflate(
@@ -69,7 +71,11 @@ object MainScreenDelegates {
                         resources.getDimensionPixelOffset(R.dimen.game_card_wide_width),
                         resources.getDimensionPixelOffset(R.dimen.game_card_wide_high)
                     )
-                    .centerCrop()
+                    .transform(
+                        CenterCrop(),
+                        RoundedCorners(resources.getDimensionPixelOffset(R.dimen.game_card_radius))
+                    )
+                    .transition(withCrossFade())
                     .into(binding.imageView)
                 binding.title = item.title
                 binding.executePendingBindings()
@@ -81,7 +87,7 @@ object MainScreenDelegates {
             }
         }
 
-    val thinProgressDelegate =
+    fun thinProgressDelegate() =
         adapterDelegateViewBinding<ProgressThinItem, ListItem, ItemProgressThinBinding>(
             { inflater, container ->
                 ItemProgressThinBinding.inflate(
@@ -92,7 +98,7 @@ object MainScreenDelegates {
             }
         ) {}
 
-    val thinGameDelegate =
+    fun thinGameDelegate() =
         adapterDelegateViewBinding<GameThinItem, ListItem, ItemGameThinBinding>(
             { inflater, container ->
                 ItemGameThinBinding.inflate(
@@ -110,7 +116,11 @@ object MainScreenDelegates {
                         resources.getDimensionPixelOffset(R.dimen.game_card_thin_width),
                         resources.getDimensionPixelOffset(R.dimen.game_card_thin_high)
                     )
-                    .centerCrop()
+                    .transform(
+                        CenterCrop(),
+                        RoundedCorners(resources.getDimensionPixelOffset(R.dimen.game_card_radius))
+                    )
+                    .transition(withCrossFade())
                     .into(binding.imageView)
                 binding.title = item.title
                 binding.executePendingBindings()

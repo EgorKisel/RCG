@@ -3,6 +3,7 @@ ext.versions = [
         adapterDelegates: '4.3.2',
         retrofit        : '2.9.0',
         glide           : '4.15.1',
+        dagger          : '2.47',
 ]
 
 ext.libs = [
@@ -31,4 +32,8 @@ ext.libs = [
 
         // Glide
         glide                      : "com.github.bumptech.glide:glide:$versions.glide",
+
+        // Dagger
+        dagger                     : "com.google.dagger:dagger:$versions.dagger",
+        daggerCompiler             : "com.google.dagger:dagger-compiler:$versions.dagger"
 ]
