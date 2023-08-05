@@ -7,9 +7,8 @@ import retrofit2.http.QueryMap
 
 interface RawgApi {
 
-    @GET("/api/games")
+    @GET("/api/games?key=721575b77ad74531b6066e37437c0b07")
     suspend fun games(
-        @Query("key") key: String,
         @QueryMap params: Map<String, String>
     ): PagedResponse
 }

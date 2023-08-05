@@ -1,6 +1,7 @@
 package com.example.rcg.viewmodel.main
 
 import androidx.lifecycle.ViewModel
+import com.example.core_network.api.RawgApi
 import com.example.rcg.DI
 import com.example.rcg.di.ScreenScope
 import com.example.rcg.di.ViewModelFactory
@@ -23,6 +24,9 @@ interface MainScreenComponent {
         @BindsInstance
         fun resources(resourceProvider: ResourceProvider): Builder
 
+        @BindsInstance
+        fun api(api: RawgApi): Builder
+
         fun build(): MainScreenComponent
     }
 
@@ -30,6 +34,7 @@ interface MainScreenComponent {
         fun create() = with(DI.appComponent) {
             DaggerMainScreenComponent.builder()
                 .resources(resources())
+                .api(DI.networkComponent.api())
                 .build()
         }
     }

@@ -1,6 +1,7 @@
 package com.example.rcg
 
 import android.app.Application
+import com.example.core_network.di.DaggerNetworkComponent
 import com.example.rcg.di.DaggerAppComponent
 
 class App : Application() {
@@ -14,5 +15,7 @@ class App : Application() {
         DI.appComponent = DaggerAppComponent.builder()
             .appContext(this)
             .build()
+
+        DI.networkComponent = DaggerNetworkComponent.create()
     }
 }
