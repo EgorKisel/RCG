@@ -6,6 +6,8 @@ import com.example.rcg.DI
 import com.example.rcg.di.ScreenScope
 import com.example.rcg.di.ViewModelFactory
 import com.example.rcg.di.ViewModelKey
+import com.example.rcg.interactor.main.MainScreenInteractor
+import com.example.rcg.interactor.main.MainScreenInteractorImpl
 import com.example.rcg.util.ResourceProvider
 import dagger.Binds
 import dagger.BindsInstance
@@ -48,4 +50,7 @@ abstract class MainScreenModule {
     @ViewModelKey(MainScreenVewModel::class)
     abstract fun mainScreenViewModel(viewModel: MainScreenVewModel): ViewModel
 
+    @Binds
+    @ScreenScope
+    abstract fun mainScreenInteractor(interactorImpl: MainScreenInteractorImpl): MainScreenInteractor
 }

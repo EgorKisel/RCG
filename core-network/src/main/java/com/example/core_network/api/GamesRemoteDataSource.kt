@@ -14,9 +14,9 @@ class GamesRemoteDataSource @Inject constructor(
     private val api: RawgApi
 ) {
 
-    //private val channel = ConflatedBroadcastChannel<PagingState>()
+    //private val channel = ConflatedBroadcastChannel<PagingState<List<GameDto>>>(PagingState.initial)
 
-    private val _channel = MutableSharedFlow<PagingState<List<GameDto>>>()
+    private val _channel = MutableSharedFlow<PagingState<List<GameDto>>>() // loading?
 
     val channel: SharedFlow<PagingState<List<GameDto>>> = _channel.asSharedFlow()
 
@@ -24,6 +24,11 @@ class GamesRemoteDataSource @Inject constructor(
         _channel.emit(PagingState.Initial)
         val response = api.games(params.toMap())
         _channel.emit(PagingState.Content(response.results))
+
+//        if (_channel.equals(PagingState.Initial)) {
+//            val response = api.games(params.toMap())
+//            _channel.emit(PagingState.Content(response.results))
+//        }
     }
 
     suspend fun loadMore() {

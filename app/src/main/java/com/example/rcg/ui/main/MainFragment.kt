@@ -18,7 +18,7 @@ class MainFragment : Fragment(R.layout.fragment_main) {
     private val binding by viewBinding { FragmentMainBinding.bind(it) }
     private val viewModel by viewModels<MainScreenVewModel> { component.viewModelFactory() }
 
-    private val adapter = MainScreenAdapter()
+    private val adapter by lazy { MainScreenAdapter(onItemBind = viewModel::initCategory) }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

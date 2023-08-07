@@ -21,7 +21,7 @@ import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateViewBinding
 
 object MainScreenDelegates {
 
-    fun gamesHorizontalDelegate() =
+    fun gamesHorizontalDelegate(onItemBind: (GamesHorizontalItem) -> Unit) =
         adapterDelegateViewBinding<GamesHorizontalItem, ListItem, ItemGamesHorizontalBinding>(
             { inflater, container ->
                 ItemGamesHorizontalBinding.inflate(
@@ -37,6 +37,7 @@ object MainScreenDelegates {
 
             // oNBindViewHolder
             bind {
+                onItemBind.invoke(item)
                 binding.titleTextView.text = item.title
                 adapter.items = item.games
             }
