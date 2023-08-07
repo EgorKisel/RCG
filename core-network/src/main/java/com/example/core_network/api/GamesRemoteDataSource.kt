@@ -24,11 +24,6 @@ class GamesRemoteDataSource @Inject constructor(
         _channel.emit(PagingState.Initial)
         val response = api.games(params.toMap())
         _channel.emit(PagingState.Content(response.results))
-
-//        if (_channel.equals(PagingState.Initial)) {
-//            val response = api.games(params.toMap())
-//            _channel.emit(PagingState.Content(response.results))
-//        }
     }
 
     suspend fun loadMore() {
