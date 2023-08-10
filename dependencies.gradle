@@ -7,6 +7,9 @@ ext.versions = [
 ]
 
 ext.libs = [
+
+        timber                     : "com.jakewharton.timber:timber:5.0.1",
+
         coroutines                 : "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3",
 
         coreKtx                    : "androidx.core:core-ktx:1.8.0",

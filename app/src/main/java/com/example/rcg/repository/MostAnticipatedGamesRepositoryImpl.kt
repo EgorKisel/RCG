@@ -1,6 +1,6 @@
 package com.example.rcg.repository
 
-import com.example.core_network.api.GamesRemoteDataSource
+import com.example.core_network.api.GamesRemoteDataSourceImpl
 import com.example.core_network.api.params.GamesApiParams
 import com.example.rcg.R
 import com.example.rcg.repository.model.CategoryType
@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class MostAnticipatedGamesRepositoryImpl @Inject constructor(
-    private val dataSource: GamesRemoteDataSource,
+    private val dataSource: GamesRemoteDataSourceImpl,
     private val resource: ResourceProvider
 ) : GameCategoryRepository {
 
@@ -30,5 +30,9 @@ class MostAnticipatedGamesRepositoryImpl @Inject constructor(
                 ordering = "-added"
             )
         )
+    }
+
+    override suspend fun loadMore(index: Int) {
+        dataSource.loadMore(index)
     }
 }

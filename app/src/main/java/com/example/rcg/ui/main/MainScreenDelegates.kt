@@ -17,11 +17,16 @@ import com.example.rcg.model.game.GameWideItem
 import com.example.rcg.model.game.GamesHorizontalItem
 import com.example.rcg.model.game.ProgressThinItem
 import com.example.rcg.model.game.ProgressWideItem
+import com.example.rcg.repository.model.CategoryType
 import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateViewBinding
+import timber.log.Timber
 
 object MainScreenDelegates {
 
-    fun gamesHorizontalDelegate(onItemBind: (GamesHorizontalItem) -> Unit) =
+    fun gamesHorizontalDelegate(
+        onItemBind: (GamesHorizontalItem) -> Unit,
+        onReadyToLoadMore: (CategoryType, Int) -> Unit
+    ) =
         adapterDelegateViewBinding<GamesHorizontalItem, ListItem, ItemGamesHorizontalBinding>(
             { inflater, container ->
                 ItemGamesHorizontalBinding.inflate(
@@ -32,7 +37,7 @@ object MainScreenDelegates {
             }
         ) {
             // onCreateViewHolder
-            val adapter = GameCardsAdapter()
+            val adapter = GameCardsAdapter { pos -> onReadyToLoadMore.invoke(item.category, pos) }
             binding.recyclerView.adapter = adapter
 
             // oNBindViewHolder
@@ -54,7 +59,7 @@ object MainScreenDelegates {
             }
         ) {}
 
-    fun wideGameDelegate() =
+    fun wideGameDelegate(onReadyToLoadMore: (Int) -> Unit) =
         adapterDelegateViewBinding<GameWideItem, ListItem, ItemGameWideBinding>(
             { inflater, container ->
                 ItemGameWideBinding.inflate(
@@ -80,6 +85,10 @@ object MainScreenDelegates {
                     .into(binding.imageView)
                 binding.title = item.title
                 binding.executePendingBindings()
+
+                Timber.e("Bind $adapterPosition")
+
+                onReadyToLoadMore.invoke(adapterPosition)
             }
             onViewRecycled {
                 if ((binding.root.context as? Activity)?.isDestroyed?.not() == true) {
@@ -99,7 +108,7 @@ object MainScreenDelegates {
             }
         ) {}
 
-    fun thinGameDelegate() =
+    fun thinGameDelegate(onReadyToLoadMore: (Int) -> Unit) =
         adapterDelegateViewBinding<GameThinItem, ListItem, ItemGameThinBinding>(
             { inflater, container ->
                 ItemGameThinBinding.inflate(
@@ -125,6 +134,8 @@ object MainScreenDelegates {
                     .into(binding.imageView)
                 binding.title = item.title
                 binding.executePendingBindings()
+
+                onReadyToLoadMore.invoke(adapterPosition)
             }
             onViewRecycled {
                 if ((binding.root.context as? Activity)?.isDestroyed?.not() == true) {

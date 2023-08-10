@@ -1,6 +1,6 @@
 package com.example.rcg.interactor.main
 
-import com.example.core_network.api.GamesRemoteDataSource
+import com.example.core_network.api.GamesRemoteDataSourceImpl
 import com.example.core_network.api.PagingState
 import com.example.core_network.api.RawgApi
 import com.example.rcg.model.base.ListItem
@@ -26,11 +26,11 @@ class MainScreenInteractorImpl @Inject constructor(
 ) : MainScreenInteractor {
 
     private val mostAnticipatedGamesRepository: GameCategoryRepository =
-        MostAnticipatedGamesRepositoryImpl(GamesRemoteDataSource(api), resources)
+        MostAnticipatedGamesRepositoryImpl(GamesRemoteDataSourceImpl(api), resources)
     private val latestReleasesGamesRepository: GameCategoryRepository =
-        LatestReleasesGamesRepositoryImpl(GamesRemoteDataSource(api), resources)
+        LatestReleasesGamesRepositoryImpl(GamesRemoteDataSourceImpl(api), resources)
     private val ratedGamesRepository: GameCategoryRepository =
-        RatedGamesRepositoryImpl(GamesRemoteDataSource(api), resources)
+        RatedGamesRepositoryImpl(GamesRemoteDataSourceImpl(api), resources)
 
     override fun data(): Flow<List<ListItem>> = combine(
         mostAnticipatedGamesRepository.data(),
@@ -49,6 +49,15 @@ class MainScreenInteractorImpl @Inject constructor(
             is CategoryType.MostAnticipated -> mostAnticipatedGamesRepository.init()
             is CategoryType.LatestReleases -> latestReleasesGamesRepository.init()
             is CategoryType.Rated -> ratedGamesRepository.init()
+            else -> {}
+        }
+    }
+
+    override suspend fun tryToLoadMore(category: CategoryType, index: Int) {
+        when (category) {
+            is CategoryType.MostAnticipated -> mostAnticipatedGamesRepository.loadMore(index)
+            is CategoryType.LatestReleases -> latestReleasesGamesRepository.loadMore(index)
+            is CategoryType.Rated -> ratedGamesRepository.loadMore(index)
             else -> {}
         }
     }
@@ -82,6 +91,29 @@ class MainScreenInteractorImpl @Inject constructor(
                             )
                         }
                     }
+                )
+            }
+
+            is PagingState.Paging -> {
+                GamesHorizontalItem(
+                    title = model.title,
+                    category = model.category,
+                    games = model.dataState.availableContent.map {
+                        if (wide) {
+                            GameWideItem(
+                                id = it.id,
+                                title = it.title,
+                                image = it.image
+                            )
+                        } else {
+                            GameThinItem(
+                                id = it.id,
+                                title = it.title,
+                                image = it.image
+                            )
+                        }
+                    }
+                        .plus(if (wide) ProgressWideItem else ProgressThinItem)
                 )
             }
 

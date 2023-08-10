@@ -7,4 +7,5 @@ interface GameCategoryRepository {
 
     fun data(): Flow<GameCategoryModel>
     suspend fun init()
+    suspend fun loadMore(index: Int)
 }
