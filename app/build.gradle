@@ -3,16 +3,18 @@ plugins {
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-kapt'
     id 'kotlin-parcelize'
+    id 'androidx.navigation.safeargs'
+
 }
 
 android {
     namespace 'com.example.rcg'
-    compileSdk 33
+    compileSdk 34
 
     defaultConfig {
         applicationId "com.example.rcg"
-        minSdk 23
-        targetSdk 33
+        minSdk 26
+        targetSdk 34
         versionCode 1
         versionName "1.0"
 
@@ -48,6 +50,8 @@ dependencies {
     implementation libs.fragment
     implementation libs.lifecycleViewModel
     implementation libs.lifecycleLiveData
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.7.0'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.7.0'
     kapt libs.lifecycleCompiller
 
     implementation libs.adapterDelegates
@@ -64,6 +68,16 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 
     implementation libs.timber
+
+    implementation libs.navFragmentKtx
+    implementation libs.navUiKtx
+    implementation libs.navigationSafeArgs
+
+    //Room
+    implementation libs.roomRuntime
+    implementation libs.roomRxJava
+    implementation libs.roomKtx
+    kapt libs.roomCompiler
 
     implementation project(':core-network')
 }

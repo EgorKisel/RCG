@@ -1,9 +1,12 @@
 ext.versions = [
-        lifecycle       : '2.6.1',
-        adapterDelegates: '4.3.2',
-        retrofit        : '2.9.0',
-        glide           : '4.15.1',
-        dagger          : '2.47',
+        lifecycle         : '2.6.1',
+        adapterDelegates  : '4.3.2',
+        retrofit          : '2.9.0',
+        glide             : '4.15.1',
+        dagger            : '2.47',
+        navigation        : '2.7.0',
+        navigationSafeArgs: '2.7.0',
+        room              : '2.4.3',
 ]
 
 ext.libs = [
@@ -38,5 +41,17 @@ ext.libs = [
 
         // Dagger
         dagger                     : "com.google.dagger:dagger:$versions.dagger",
-        daggerCompiler             : "com.google.dagger:dagger-compiler:$versions.dagger"
+        daggerCompiler             : "com.google.dagger:dagger-compiler:$versions.dagger",
+
+        // Navigation
+        navFragmentKtx             : "androidx.navigation:navigation-fragment-ktx:$versions.navigation",
+        navUiKtx                   : "androidx.navigation:navigation-ui-ktx:$versions.navigation",
+        navigationSafeArgs         :
+                "androidx.navigation:navigation-safe-args-gradle-plugin:$versions.navigationSafeArgs",
+
+        // Room
+        roomRuntime                : "androidx.room:room-runtime:$versions.room",
+        roomRxJava                 : "androidx.room:room-rxjava3:$versions.room",
+        roomKtx                    : "androidx.room:room-ktx:$versions.room",
+        roomCompiler               : "androidx.room:room-compiler:$versions.room",
 ]

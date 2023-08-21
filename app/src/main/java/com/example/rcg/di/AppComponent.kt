@@ -1,6 +1,7 @@
 package com.example.rcg.di
 
 import android.content.Context
+import com.example.rcg.persist.AppDatabase
 import com.example.rcg.util.AndroidResourceProvider
 import com.example.rcg.util.ResourceProvider
 import dagger.Binds
@@ -15,10 +16,15 @@ interface AppComponent {
 
     fun resources(): ResourceProvider
 
+    fun database(): AppDatabase
+
     @Component.Builder
     interface Builder {
         @BindsInstance
         fun appContext(context: Context): Builder
+
+        @BindsInstance
+        fun database(database: AppDatabase): Builder
 
         fun build(): AppComponent
     }

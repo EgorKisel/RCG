@@ -13,4 +13,6 @@
     <color name="gameTitleText">@color/baseWhite</color>
 
     <color name="placeholder">#FF4F4F4F</color>
+
+    <color name="bg_cover_placeholder">#FF0000</color>
 </resources>

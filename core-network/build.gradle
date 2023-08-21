@@ -6,14 +6,20 @@ plugins {
 
 android {
     namespace 'com.example.core_network'
-    compileSdk 33
+    compileSdk 34
 
     defaultConfig {
-        minSdk 23
-        targetSdk 33
+        minSdk 26
+        targetSdk 34
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
+
+        buildConfigField "String", "api_key", "\"h721575b77ad74531b6066e37437c0b07\""
+    }
+
+    buildFeatures {
+        buildConfig = true
     }
 
     buildTypes {

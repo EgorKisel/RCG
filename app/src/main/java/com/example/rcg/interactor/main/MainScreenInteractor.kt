@@ -9,4 +9,5 @@ interface MainScreenInteractor {
     fun data(): Flow<List<ListItem>>
     suspend fun initCategory(category: CategoryType)
     suspend fun tryToLoadMore(category: CategoryType, index: Int)
+    suspend fun refresh(category: CategoryType?)
 }

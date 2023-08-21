@@ -1,36 +1,31 @@
 package com.example.rcg.interactor.main
 
-import com.example.core_network.api.GamesRemoteDataSourceImpl
 import com.example.core_network.api.PagingState
-import com.example.core_network.api.RawgApi
+import com.example.core_network.model.GameDto
 import com.example.rcg.model.base.ListItem
 import com.example.rcg.model.game.GameThinItem
 import com.example.rcg.model.game.GameWideItem
 import com.example.rcg.model.game.GamesHorizontalItem
-import com.example.rcg.model.game.ProgressThinItem
-import com.example.rcg.model.game.ProgressWideItem
 import com.example.rcg.repository.GameCategoryRepository
-import com.example.rcg.repository.LatestReleasesGamesRepositoryImpl
-import com.example.rcg.repository.MostAnticipatedGamesRepositoryImpl
-import com.example.rcg.repository.RatedGamesRepositoryImpl
 import com.example.rcg.repository.model.CategoryType
 import com.example.rcg.repository.model.GameCategoryModel
-import com.example.rcg.util.ResourceProvider
+import com.example.rcg.ui.base.model.game.ProgressWideItem
+import com.example.rcg.ui.base.model.game.ProgressThinItem
+import com.example.rcg.ui.base.model.game.ErrorThinItem
+import com.example.rcg.ui.base.model.game.ErrorWideItem
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import javax.inject.Inject
+import javax.inject.Named
 
 class MainScreenInteractorImpl @Inject constructor(
-    api: RawgApi,
-    resources: ResourceProvider
+    @Named("mostAnticipated") private val mostAnticipatedGamesRepository: GameCategoryRepository,
+    @Named("latestReleases") private val latestReleasesGamesRepository: GameCategoryRepository,
+    @Named("rated") private val ratedGamesRepository: GameCategoryRepository,
 ) : MainScreenInteractor {
-
-    private val mostAnticipatedGamesRepository: GameCategoryRepository =
-        MostAnticipatedGamesRepositoryImpl(GamesRemoteDataSourceImpl(api), resources)
-    private val latestReleasesGamesRepository: GameCategoryRepository =
-        LatestReleasesGamesRepositoryImpl(GamesRemoteDataSourceImpl(api), resources)
-    private val ratedGamesRepository: GameCategoryRepository =
-        RatedGamesRepositoryImpl(GamesRemoteDataSourceImpl(api), resources)
 
     override fun data(): Flow<List<ListItem>> = combine(
         mostAnticipatedGamesRepository.data(),
@@ -55,20 +50,43 @@ class MainScreenInteractorImpl @Inject constructor(
 
     override suspend fun tryToLoadMore(category: CategoryType, index: Int) {
         when (category) {
-            is CategoryType.MostAnticipated -> mostAnticipatedGamesRepository.loadMore(index)
-            is CategoryType.LatestReleases -> latestReleasesGamesRepository.loadMore(index)
-            is CategoryType.Rated -> ratedGamesRepository.loadMore(index)
+            is CategoryType.MostAnticipated -> mostAnticipatedGamesRepository.tryToLoadMore(index)
+            is CategoryType.LatestReleases -> latestReleasesGamesRepository.tryToLoadMore(index)
+            is CategoryType.Rated -> ratedGamesRepository.tryToLoadMore(index)
             else -> {}
         }
     }
 
-    private fun mapToCategory(model: GameCategoryModel, wide: Boolean = false): ListItem =
+    override suspend fun refresh(category: CategoryType?) {
+        when (category) {
+            CategoryType.LatestReleases -> latestReleasesGamesRepository.refresh(false)
+            CategoryType.MostAnticipated -> mostAnticipatedGamesRepository.refresh(false)
+            CategoryType.Rated -> ratedGamesRepository.refresh(false)
+            null -> {
+                coroutineScope {
+                    awaitAll(
+                        async { mostAnticipatedGamesRepository.refresh(true) },
+                        async { latestReleasesGamesRepository.refresh(true) },
+                        async { ratedGamesRepository.refresh(true) },
+                    )
+                }
+            }
+        }
+    }
+
+    private fun mapToCategory(
+        model: GameCategoryModel,
+        wide: Boolean = false
+    ): GamesHorizontalItem =
         when (model.dataState) {
             is PagingState.Initial -> {
                 GamesHorizontalItem(
                     title = model.title,
                     category = model.category,
-                    games = IntRange(1, 3).map { if (wide) ProgressWideItem else ProgressThinItem }
+                    games = IntRange(1, 3)
+                        .map { if (wide) ProgressWideItem(false)
+                        else ProgressThinItem(false)
+                        }
                 )
             }
 
@@ -76,21 +94,7 @@ class MainScreenInteractorImpl @Inject constructor(
                 GamesHorizontalItem(
                     title = model.title,
                     category = model.category,
-                    games = model.dataState.data.map {
-                        if (wide) {
-                            GameWideItem(
-                                id = it.id,
-                                title = it.title,
-                                image = it.image
-                            )
-                        } else {
-                            GameThinItem(
-                                id = it.id,
-                                title = it.title,
-                                image = it.image
-                            )
-                        }
-                    }
+                    games = model.dataState.data.toItems(wide)
                 )
             }
 
@@ -98,27 +102,46 @@ class MainScreenInteractorImpl @Inject constructor(
                 GamesHorizontalItem(
                     title = model.title,
                     category = model.category,
-                    games = model.dataState.availableContent.map {
-                        if (wide) {
-                            GameWideItem(
-                                id = it.id,
-                                title = it.title,
-                                image = it.image
-                            )
-                        } else {
-                            GameThinItem(
-                                id = it.id,
-                                title = it.title,
-                                image = it.image
-                            )
-                        }
-                    }
-                        .plus(if (wide) ProgressWideItem else ProgressThinItem)
+                    games = model.dataState.availableContent.toItems(wide)
+                        .plus(if (wide) ProgressWideItem(true)
+                        else ProgressThinItem(true)
+                        )
                 )
             }
 
-            else -> {
-                throw IllegalArgumentException("Wrong paging state ${model.dataState}")
+            is PagingState.Persist -> {
+                GamesHorizontalItem(
+                    title = model.title,
+                    category = model.category,
+                    games = model.dataState.data.toItems(wide)
+                        .plus(if (wide) ErrorWideItem(model.category) else ErrorThinItem(model.category))
+                )
             }
+
+            is PagingState.Error -> {
+                GamesHorizontalItem(
+                    title = model.title,
+                    category = model.category,
+                    games = listOf(if (wide) ErrorWideItem(model.category) else ErrorThinItem(model.category))
+                )
+            }
+
+            else -> throw IllegalArgumentException("Wrong paging state ${model.dataState}")
         }
+    private fun List<GameDto>.toItems(wide: Boolean) = map {
+        if (wide) {
+            GameWideItem(
+                id = it.id,
+                title = it.title,
+                image = it.image
+            )
+        } else {
+            GameThinItem(
+                id = it.id,
+                title = it.title,
+                image = it.image
+            )
+        }
+    }
+
 }

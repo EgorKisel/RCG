@@ -6,4 +6,5 @@
     <dimen name="game_card_thin_width">146dp</dimen>
     <dimen name="game_card_thin_high">208dp</dimen>
     <dimen name="game_card_radius">10dp</dimen>
+    <dimen name="game_card_wide_height">166dp</dimen>
 </resources>
